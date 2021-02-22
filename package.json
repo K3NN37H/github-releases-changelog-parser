@@ -1,0 +1,26 @@
+{
+  "name": "github-releases-changelog",
+  "version": "0.0.1",
+  "description": "Fetches a repo's release notes and searches for breaking changes",
+  "main": "index.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "serve": "serve ./build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "K3NN37H",
+  "license": "",
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "rollup-plugin-pnp-resolve": "^2.0.0",
+    "serve": "^11.3.2",
+    "snowpack": "^3.0.11",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-markdown": "^5.0.3"
+  }
+}
