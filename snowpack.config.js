@@ -7,8 +7,5 @@ module.exports = {
     "minify": true
   },
   "packageOptions": {
-    "rollup": {
-      "plugins": [require('rollup-plugin-pnp-resolve')()],
-    },
   },
 }
