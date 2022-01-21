@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "@octokit/core": "./@octokit/core.js",
+    "@octokit/plugin-paginate-rest": "./@octokit/plugin-paginate-rest.js",
+    "@octokit/plugin-throttling": "./@octokit/plugin-throttling.js",
+    "react": "./react.js",
+    "react-dom": "./react-dom.js",
+    "react-markdown": "./react-markdown.js"
+  }
+}

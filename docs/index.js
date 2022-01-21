@@ -1,0 +1,1 @@
+import e from"./_snowpack/pkg/react.js";import t from"./_snowpack/pkg/react-dom.js";import o from"./main.js";function r(){return e.createElement(o,null)}t.render(r(),document.getElementById("root-container"));
