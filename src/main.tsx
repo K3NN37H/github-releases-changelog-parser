@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import React, { useMemo, useState } from 'react'
 import { Octokit } from '@octokit/core'
+import { Endpoints } from '@octokit/types'
 import { throttling } from '@octokit/plugin-throttling'
 import { paginateRest } from '@octokit/plugin-paginate-rest'
 
@@ -23,20 +24,16 @@ const ghClient = new pluggedClient({
 
 const breakingReg = /breaking/i
 
-const repoReg = "[-\\w.]+/[-\\w.]+"
+const repoReg = "[\\-\\w.]+/[\\-\\w.]+"
 
-type ReleasesData = {
-  name: string | null
-  tag_name: string
-  body?: string | null
-}
+const PER_PAGE = 100
 
 type DataState = 'init' | 'loading' | 'success' | 'error'
 
 export default function App() {
   const [repo, setRepo] = useState('')
-  const [data, setData] = useState<ReleasesData[] | null>(null)
-  const [numberOfReleases, setNumberOfReleases] = useState(100)
+  const [data, setData] = useState<Endpoints['GET /repos/{owner}/{repo}/releases']['response']['data'] | null>(null)
+  const [maxNumberOfReleases, setNumberOfReleases] = useState(200)
   const [stopAtVersion, setStopAtVersion] = useState('')
   const [pagingLimit, setPagingLimit] = useState(10)
   const [dataState, setDataState] = React.useState<DataState>('init')
@@ -50,16 +47,21 @@ export default function App() {
     const doFetch = async () => {
       // webpack or formium/formik or octokit/request.js
       let currentPage = 1
+      let loadedNumberOfReleases = 0
       const [owner, repoName] = repo.split('/')
       const respData = await ghClient.paginate('GET /repos/{owner}/{repo}/releases', {
         owner,
         repo: repoName,
-        per_page: numberOfReleases
+        per_page: PER_PAGE
       }, (response, done) => {
+        loadedNumberOfReleases += PER_PAGE
         if (response.data.find(({ name, tag_name }) => stopAtVersion && (tag_name === stopAtVersion || name === stopAtVersion))) {
           done()
         }
         else if (currentPage++ >= pagingLimit) {
+          done()
+        }
+        else if (loadedNumberOfReleases >= maxNumberOfReleases) {
           done()
         }
         return response.data
@@ -91,7 +93,7 @@ export default function App() {
       return data.map(
         (release) =>
           <div key={release.tag_name}>
-            <h1 id={release.tag_name}>{release.tag_name}</h1>
+            <a href={release.html_url}><h1 id={release.tag_name}>{release.tag_name}</h1></a><span>{release.published_at && new Date(Date.parse(release.published_at)).toString()}</span>
             <ReactMarkdown children={release.body || ''} />
           </div>
       )
@@ -104,9 +106,9 @@ export default function App() {
       <form onSubmit={onSubmit}>
         <label htmlFor='repo'>Owner/repo</label>
         <input type='text' id='repo' placeholder='owner/repo' pattern={repoReg} required onChange={event => setRepo(event.target.value)} />
-        <label htmlFor='releases'>Number of releases per page</label>
-        <input type='range' id='releases' min={1} max={100} value={numberOfReleases} onChange={event => setNumberOfReleases(parseInt(event.target.value, 10))} />
-        {numberOfReleases}
+        <label htmlFor='releases'>Max number of releases to load</label>
+        <input type='range' id='releases' min={100} max={1000} step={100} value={maxNumberOfReleases} onChange={event => setNumberOfReleases(parseInt(event.target.value, 10))} />
+        {maxNumberOfReleases}
         <label htmlFor='stopversion'>Oldest version to stop at</label>
         <input type='text' id='stopversion' onChange={event => setStopAtVersion(event.target.value)} />
         <input type='submit' />
