@@ -4,5 +4,9 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
   plugins: [react()],
-  root: 'src'
+  root: 'src',
+  build: {
+    outDir: '../docs',
+    emptyOutDir: true
+  }
 }));
