@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import App from './main.js'
+import App from './main'
 
 function simpleComp() {
   return (
