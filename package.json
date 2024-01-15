@@ -2,6 +2,7 @@
   "name": "github-releases-changelog",
   "version": "0.1.0",
   "description": "Fetches a repo's release notes and searches for breaking changes",
+  "packageManager": "yarn@4.0.2",
   "main": "index.js",
   "scripts": {
     "start": "snowpack dev",
