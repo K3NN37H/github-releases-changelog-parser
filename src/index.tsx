@@ -1,12 +1,8 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import App from './main'
 
-function simpleComp() {
-  return (
-    <App />
-  )
-}
+const root = createRoot(document.getElementById('root-container')!)
 
-ReactDOM.render(simpleComp(), document.getElementById('root-container'))
+root.render(<App />)
